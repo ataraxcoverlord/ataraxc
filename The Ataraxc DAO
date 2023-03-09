@@ -1,0 +1,29 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+
+contract AtaraxcDAO {
+    uint256 public totalMembers;
+    uint256 public maxMembers = 500_000;
+    mapping(address => bool) public isMember;
+    mapping(address => uint256) public memberIds;
+    IERC721 public nftToken;
+
+    event MemberAdded(address indexed member, uint256 indexed id);
+
+    constructor(IERC721 _nftToken) {
+        nftToken = _nftToken;
+    }
+
+    function addMember() external {
+        require(totalMembers < maxMembers, "AtaraxcDAO: maximum members reached");
+        require(!isMember[msg.sender], "AtaraxcDAO: caller is already a member");
+        totalMembers++;
+        uint256 id = totalMembers;
+        isMember[msg.sender] = true;
+        memberIds[msg.sender] = id;
+        emit MemberAdded(msg.sender, id);
+        nftToken.mint(msg.sender, id);
+    }
+}
