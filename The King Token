@@ -1,0 +1,73 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+
+contract KingToken is Ownable, IERC721Receiver {
+    using SafeMath for uint256;
+    using SafeERC20 for IERC20;
+
+    string public name = "King Token";
+    string public symbol = "ARXX";
+    uint256 public totalSupply = 3_000_000 * 10**18;
+    uint256 public circulatingSupply = 1 * 10**18;
+    bool public flashLoanEnabled = true;
+    
+    mapping(address => uint256) public balances;
+    mapping(address => bool) public minters;
+    mapping(address => mapping(address => uint256)) public allowed;
+
+    event Transfer(address indexed _from, address indexed _to, uint256 _value);
+    event Approval(address indexed _owner, address indexed _spender, uint256 _value);
+    event FlashLoan(address indexed _borrower, address indexed _token, uint256 _amount);
+    event Mint(address indexed _to, uint256 _tokenId);
+
+    modifier onlyMinter() {
+        require(minters[msg.sender], "KingToken: caller is not a minter");
+        _;
+    }
+    
+    constructor() {
+        balances[msg.sender] = circulatingSupply;
+    }
+    
+    function setFlashLoanEnabled(bool _flashLoanEnabled) external onlyOwner {
+        flashLoanEnabled = _flashLoanEnabled;
+    }
+
+    function transfer(address _to, uint256 _value) public returns (bool success) {
+        require(_to != address(0), "KingToken: transfer to the zero address");
+        require(balances[msg.sender] >= _value, "KingToken: insufficient balance");
+        balances[msg.sender] = balances[msg.sender].sub(_value);
+        balances[_to] = balances[_to].add(_value);
+        emit Transfer(msg.sender, _to, _value);
+        return true;
+    }
+
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
+        require(_to != address(0), "KingToken: transfer to the zero address");
+        require(balances[_from] >= _value, "KingToken: insufficient balance");
+        require(allowed[_from][msg.sender] >= _value, "KingToken: insufficient allowance");
+        balances[_from] = balances[_from].sub(_value);
+        balances[_to] = balances[_to].add(_value);
+        allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value);
+        emit Transfer(_from, _to, _value);
+        return true;
+    }
+
+    function approve(address _spender, uint256 _value) public returns (bool success) {
+        allowed[msg.sender][_spender] = _value;
+        emit Approval(msg.sender, _spender, _value);
+        return true;
+    }
+
+    function allowance(address _owner, address _spender) public view returns (uint256 remaining) {
+        return allowed[_owner][_spender];
+    }
+
+    function increaseAllowance(address _spender, uint256 _addedValue) public returns (
