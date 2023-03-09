@@ -1,0 +1,21 @@
+Below are the contribution guidelines for the Ataraxc repository:
+
+Fork the Ataraxc repository to your own GitHub account.
+
+Clone the repository to your local machine using git clone.
+
+Create a new branch for your changes using a descriptive name. For example, if you're working on a feature that adds a new function to the smart contract, you could name your branch smart-contract-add-function.
+
+Make your changes and commit them with a descriptive commit message. Your commit message should explain what changes you made and why you made them. For example, Added new function to smart contract to allow for token transfers.
+
+Push your changes to your branch on your forked repository.
+
+Submit a pull request to the main Ataraxc repository. Your pull request should include a clear description of your changes, as well as any relevant information or context.
+
+Once you've submitted your pull request, a member of the Ataraxc team will review your changes and provide feedback. You may be asked to make additional changes or revisions.
+
+Once your changes have been approved, they will be merged into the main Ataraxc repository.
+
+Repeat steps 3-8 as needed for additional contributions.
+
+It's important to note that all contributions to the Ataraxc repository should be made in accordance with the project's goals and vision. The project is designed to give everyone access to large-scale investing authority, so all contributions should be geared toward that goal. Additionally, contributors should adhere to best practices for smart contract development and follow established coding conventions to ensure consistency and readability.
