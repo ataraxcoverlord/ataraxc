@@ -1,0 +1,70 @@
+pragma solidity ^0.8.0;
+
+contract ARXX {
+    // Event to track token transfers
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
+    // Event to track NFT token distribution
+    event NFTDistributed(address indexed to, uint256 value);
+
+    // Mapping to keep track of NFT holders
+    mapping(address => uint256) public nftHolders;
+
+    // Total supply of tokens
+    uint256 public totalSupply = 1000000;
+
+    // Balance of each address
+    mapping(address => uint256) public balanceOf;
+
+    // Owner of contract
+    address public owner;
+
+    // Constructor to initialize the contract
+    constructor() public {
+        owner = msg.sender;
+        balanceOf[owner] = totalSupply;
+    }
+
+    // Method to grant NFT
+    function grantNFT(address _to) public {
+        // Ensure only the owner can grant NFTs
+        require(msg.sender == owner, "Only the owner can grant NFTs.");
+
+        // Add the address to the mapping of NFT holders
+        nftHolders[_to] = 1;
+    }
+
+    // Method to distribute tokens to NFT holders
+    function distributeToken() public {
+        // Check if the current block timestamp is divisible by a year
+        if (block.timestamp % 31536000 == 0) {
+            // Loop through the mapping of NFT holders
+            for (address nftHolder : nftHolders) {
+                // Check if the NFT holder has enough balance
+                if (balanceOf[nftHolder] > 0) {
+                    // Transfer 1 token to the NFT holder
+                    balanceOf[nftHolder] -= 1;
+                    balanceOf[nftHolder] += 1;
+                    emit Transfer(owner, nftHolder, 1);
+                    emit NFTDistributed(nftHolder, 1);
+                }
+            }
+        }
+    }
+
+    // Method to transfer tokens from one address to another
+    function transfer(address _to, uint256 _value) public {
+        // Ensure the sender has enough balance
+        require(balanceOf[msg.sender] >= _value, "Not enough balance.");
+
+        // Ensure the recipient is not the zero address
+        require(_to != address(0), "Recipient address cannot be zero.");
+
+        // Transfer tokens from the sender to the recipient
+        balanceOf[msg.sender] -= _value;
+        balanceOf[_to] += _value;
+
+        // Emit a transfer event
+        emit Transfer(msg.sender, _to, _value);
+    }
+}
