@@ -1,0 +1,35 @@
+// define the block structure
+struct Block {
+    uint256 id;
+    uint256 previousHash;
+    uint256 currentHash;
+    uint256 timestamp;
+    uint256 nonce;
+    uint256 data;
+}
+
+// method to add a new block
+function addBlock(uint256 data) public {
+    Block memory newBlock;
+    newBlock.id = blocks.length + 1;
+    newBlock.timestamp = now;
+    newBlock.data = data;
+
+    // calculate previous hash
+    if (blocks.length == 0) {
+        newBlock.previousHash = 0;
+    } else {
+        newBlock.previousHash = blocks[blocks.length - 1].currentHash;
+    }
+
+    // calculate current hash using Proof of Work (PoW) algorithm
+    uint256 nonce = 0;
+    while (newBlock.currentHash != sha3(newBlock.previousHash, newBlock.timestamp, newBlock.data, nonce)) {
+        nonce++;
+    }
+    newBlock.nonce = nonce;
+    newBlock.currentHash = sha3(newBlock.previousHash, newBlock.timestamp, newBlock.data, newBlock.nonce);
+
+    // add the block to the array of blocks
+    blocks.push(newBlock);
+}
