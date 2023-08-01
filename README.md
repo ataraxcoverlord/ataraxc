@@ -1,7 +1,7 @@
 # ataraxc
 Ataraxc Blockchain Technologies (open-source)
 
-<h1>Welcome to Ataraxc Blockchain Technologies!</h1> This is a cryptocurrency project aimed at providing large-scale investing authority to everyone. Our goal is to reduce volatility in the cryptocurrency space and provide a platform that allows all members to enjoy financial success. The project consists of a native token called the King Token (ARXX)
+<h1>Welcome to Ataraxc Blockchain Technologies</h1> This is a cryptocurrency project aimed at providing large-scale investing authority to everyone. Our goal is to reduce volatility in the cryptocurrency space and provide a platform that allows all members to enjoy financial success. The project consists of a native token called the King Token (ARXX)
 with a total token supply of three million and a circulating supply of one single token.
 
 Additionally, there is a self-replicating DAO (decentralized autonomous organization) comprised of 500,000 members. Membership is obtained through the purchase of an NFT linked to the King Token. When the DAO reaches 500,000 members, a new DAO is created, and the process is replicated infinitely.
